@@ -15,7 +15,7 @@ enum GpWebpayRequestPaymentMethod {
 }
 
 class GpWebpayRequest {
-  merchantNumber: string;
+  merchantNumber?: string;
   operation: GpWebpayOperation;
   orderNumber: number;
   amount: number;
@@ -35,14 +35,12 @@ class GpWebpayRequest {
   digest?: string;
 
   constructor(
-    merchantNumber: string,
     operation: GpWebpayOperation,
     orderNumber: number,
     amount: number,
     currency: GpWebpayRequestCurrency,
     url: string,
   ) {
-    this.merchantNumber = merchantNumber;
     this.operation = operation;
     this.orderNumber = orderNumber;
     this.amount = amount;
@@ -93,7 +91,7 @@ class GpWebpayRequest {
   }
 
   getPostData() {
-    const keyMap: any = {
+    const keyMap: Record<string, string> = {
       'merchantNumber': 'MERCHANTNUMBER',
       'operation': 'OPERATION',
       'orderNumber': 'ORDERNUMBER',
@@ -113,11 +111,11 @@ class GpWebpayRequest {
       'digest': 'DIGEST',
     };
     const data = [];
-    const values = Object.values(this);
-    const keys = Object.keys(this);
-    for (let i = 0; i < keys.length; i += 1) {
-      if (keyMap[keys[i]]) {
-        data.push(keyMap[keys[i]] + '=' + encodeURIComponent(values[i]));
+    for (const key of Object.keys(keyMap)) {
+      // @ts-ignore
+      const value = this[key];
+      if (value) {
+        data.push(keyMap[key] + '=' + encodeURIComponent(value));
       }
     }
 

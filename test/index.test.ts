@@ -16,11 +16,11 @@ const config = {
 const client = new GpWebpayClient(config.merchantNumber, config.gatewayUrl, config.privateKey, config.privateKeyPass, config.publicKey);
 
 test('get new payment redirect url', async (done) => {
-  const request = new GpWebpayRequest(config.merchantNumber, GpWebpayOperation.CREATE_ORDER, 3008, 1000, GpWebpayRequestCurrency.CZK, 'https://www.dswd.cz/');
+  const request = new GpWebpayRequest(GpWebpayOperation.CREATE_ORDER, 3008, 1000, GpWebpayRequestCurrency.CZK, 'https://www.dswd.cz/');
 
   const redirectUrl = await client.getRequestUrl(request);
 
-  expect(redirectUrl).toBe('https://test.3dsecure.gpwebpay.com/pgw/order.do?DEPOSITFLAG=1&MERCHANTNUMBER=123456789&OPERATION=CREATE_ORDER&ORDERNUMBER=3008&AMOUNT=1000&CURRENCY=203&URL=https%3A%2F%2Fwww.dswd.cz%2F&DIGEST=E1yHrbZuvvJGiTfv%2FekL1Cm%2FOrbLYchAqensuObGo2gyPDx8EXqT5%2BOS9HXZfd2vW%2F5vTeA7Rg6beDGBl9nQw3NnxpnrF4nV8tBEYgC7eZX%2Fs%2Bh05AlvCIpKJbjFtVa83wln2Fg9eOfSlIbqN8WAqjzRXLIDy8b%2BKgYqAcFAidYZNsOT7ufuz9zsdYuAYRBlBmp%2FlBUJ%2FNagYlJjWRpKNNwrXvIyW0yKlW6TtJR%2FDNkGod62jOASafVk69CUGgNI%2F81hF8fGEg8DFZW%2FdHFodSRzE4zc9EdYSMlV%2FLOihulqld7U5uJTktqKe8QABISCYZ6PDCOPAC9%2BtZ1drNY2IQ%3D%3D');
+  expect(redirectUrl).toBe('https://test.3dsecure.gpwebpay.com/pgw/order.do?MERCHANTNUMBER=123456789&OPERATION=CREATE_ORDER&ORDERNUMBER=3008&AMOUNT=1000&CURRENCY=203&DEPOSITFLAG=1&URL=https%3A%2F%2Fwww.dswd.cz%2F&DIGEST=E1yHrbZuvvJGiTfv%2FekL1Cm%2FOrbLYchAqensuObGo2gyPDx8EXqT5%2BOS9HXZfd2vW%2F5vTeA7Rg6beDGBl9nQw3NnxpnrF4nV8tBEYgC7eZX%2Fs%2Bh05AlvCIpKJbjFtVa83wln2Fg9eOfSlIbqN8WAqjzRXLIDy8b%2BKgYqAcFAidYZNsOT7ufuz9zsdYuAYRBlBmp%2FlBUJ%2FNagYlJjWRpKNNwrXvIyW0yKlW6TtJR%2FDNkGod62jOASafVk69CUGgNI%2F81hF8fGEg8DFZW%2FdHFodSRzE4zc9EdYSMlV%2FLOihulqld7U5uJTktqKe8QABISCYZ6PDCOPAC9%2BtZ1drNY2IQ%3D%3D');
   done();
 })
 
