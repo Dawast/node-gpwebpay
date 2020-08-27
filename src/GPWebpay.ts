@@ -9,25 +9,23 @@ enum GpWebpayOperation {
 class GpWebpay {
   merchantNumber: string;
   gatewayUrl: string;
-  privateKeyPath: string;
   privateKeyPass: string;
-  publicKeyPath: string;
 
-  private publicKey?: string;
-  private privateKey?: string;
+  private publicKey: string;
+  private privateKey: string;
 
   constructor(
     merchantNumber: string,
     gatewayUrl: string,
-    privateKeyPath: string,
+    privateKey: string,
     privateKeyPass: string,
-    publicKeyPath: string,
+    publicKey: string,
   ) {
     this.merchantNumber = merchantNumber;
     this.gatewayUrl = gatewayUrl;
-    this.privateKeyPath = privateKeyPath;
+    this.privateKey = privateKey;
     this.privateKeyPass = privateKeyPass;
-    this.publicKeyPath = publicKeyPath;
+    this.publicKey = publicKey;
   }
 
   async getRequestUrl(request: GpWebpayRequest) {
@@ -64,24 +62,16 @@ class GpWebpay {
     })
   }
 
-  async getPrivateKey() {
-    if (!this.privateKey) {
-      this.privateKey = await this.readFile(this.privateKeyPath);
-    }
-
+  getPrivateKey() {
     return this.privateKey;
   }
 
-  async getPublicKey() {
-    if (!this.publicKey) {
-      this.publicKey = await this.readFile(this.publicKeyPath);
-    }
-
+  getPublicKey() {
     return this.publicKey;
   }
 
   async createResponse(data: GpWebpayResponseData) {
-    const publicKey = await this.getPublicKey();
+    const publicKey = this.getPublicKey();
     return new GpWebpayResponse(this.merchantNumber, data, publicKey);
   }
 }

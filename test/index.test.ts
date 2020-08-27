@@ -1,15 +1,19 @@
+import { readFileSync } from 'fs';
 import GpWebpayRequest, {GpWebpayRequestCurrency} from '../src/GpWebpayRequest';
 import GpWebpayClient, { GpWebpayOperation } from '../src/GPWebpay';
 
+const publicKey = readFileSync('test/publicKey.pem').toString();
+const privateKey = readFileSync('test/privateKey.pem').toString();
+
 const config = {
   gatewayUrl: 'https://test.3dsecure.gpwebpay.com/pgw/order.do',
-  publicKey: 'test/publicKey.pem',
-  privateKeyPath: 'test/privateKey.pem',
+  publicKey,
+  privateKey,
   privateKeyPass: 'TestKey2000+',
   merchantNumber: '123456789',
 };
 
-const client = new GpWebpayClient(config.merchantNumber, config.gatewayUrl, config.privateKeyPath, config.privateKeyPass, config.publicKey);
+const client = new GpWebpayClient(config.merchantNumber, config.gatewayUrl, config.privateKey, config.privateKeyPass, config.publicKey);
 
 test('get new payment redirect url', async (done) => {
   const request = new GpWebpayRequest(config.merchantNumber, GpWebpayOperation.CREATE_ORDER, 3008, 1000, GpWebpayRequestCurrency.CZK, 'https://www.dswd.cz/');
