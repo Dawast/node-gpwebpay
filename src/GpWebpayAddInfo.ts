@@ -53,6 +53,8 @@ class GpWebpayAddInfo {
   billingDetails?: BillingDetails;
   shippingDetails?: ShippingDetails;
 
+  constructor() {}
+
   setCardholderDetails(data: CardholderDetails) {
     this.cardholderDetails = data;
   }
