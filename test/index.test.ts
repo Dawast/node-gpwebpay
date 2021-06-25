@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import GpWebpayRequest, {GpWebpayRequestCurrency} from '../src/GpWebpayRequest';
 import GpWebpayClient, { GpWebpayOperation } from '../src/GPWebpay';
+import GpWebpayAddInfo from '../src/GpWebpayAddInfo';
 
 const publicKey = readFileSync('test/publicKey.pem').toString();
 const privateKey = readFileSync('test/privateKey.pem').toString();
@@ -14,6 +15,41 @@ const config = {
 };
 
 const client = new GpWebpayClient(config.merchantNumber, config.gatewayUrl, config.privateKey, config.privateKeyPass, config.publicKey);
+
+function getAddInfoXml() {
+  const addInfo = new GpWebpayAddInfo();
+  addInfo.setCardholderDetails({
+    name: 'Jan Novák',
+    email: 'jan@novak.cz',
+  });
+
+  addInfo.setBillingDetails({
+    name: 'Jan Novák',
+    address1: 'Novákova 25/5',
+    city: 'Praha',
+    postalCode: '12345',
+    country: 203,
+  });
+
+  addInfo.setShippingDetails({
+    name: 'Jan Novák',
+    address1: 'Novákova 25/5',
+    city: 'Praha',
+    postalCode: '12345',
+    country: 203,
+    method: 'courier',
+  });
+
+  return addInfo.getXml()
+}
+
+test('ADDINFO', () => {
+  const xml = getAddInfoXml();
+  const expectedXml = '<?xml version="1.0" encoding="utf-8"?><additionalInfoRequest xmlns="http://gpe.cz/gpwebpay/additionalInfo/request" version="4.0"><cardholderInfo><cardholderDetails><name>Jan Novák</name><email>jan@novak.cz</email></cardholderDetails><addressMatch>N</addressMatch><billingDetails><name>Jan Novák</name><address1>Novákova 25/5</address1><city>Praha</city><postalCode>12345</postalCode><country>203</country></billingDetails><shippingDetails><name>Jan Novák</name><address1>Novákova 25/5</address1><city>Praha</city><postalCode>12345</postalCode><country>203</country><method>courier</method></shippingDetails></cardholderInfo></additionalInfoRequest>';
+
+  expect(xml).toBe(expectedXml);
+});
+
 
 test('get new payment redirect url', async (done) => {
   const request = new GpWebpayRequest(GpWebpayOperation.CREATE_ORDER, 3008, 1000, GpWebpayRequestCurrency.CZK, 'https://www.dswd.cz/');
