@@ -33,6 +33,8 @@ class GpWebpayRequest {
   addInfo?: string;
   lang?: string;
   digest?: string;
+  fastpayid?: number;
+  userparam1?: string;
 
   constructor(
     operation: GpWebpayOperation,
@@ -73,8 +75,14 @@ class GpWebpayRequest {
     if (this.description && this.description.length > 255) {
       throw new Error('url can have a maximum of 255 characters.')
     }
+    if (this.fastpayid && this.fastpayid.toString().length > 15) {
+      throw new Error('fastpayid can have a maximum of 15 characters.')
+    }
     if (this.md && this.md.length > 255) {
       throw new Error('md can have a maximum of 255 characters.')
+    }
+    if (this.userparam1 && this.userparam1.length > 255) {
+      throw new Error('userparam1 can have a maximum of 255 characters.')
     }
     if (this.email && this.email.length > 255) {
       throw new Error('email can have a maximum of 255 characters.')
@@ -102,6 +110,8 @@ class GpWebpayRequest {
       'url': 'URL',
       'description': 'DESCRIPTION',
       'md': 'MD',
+      'userparam1': 'USERPARAM1',
+      'fastpayid': 'FASTPAYID',
       'paymentMethod': 'PAYMETHOD',
       'disabledPaymentMethod': 'DISABLEPAYMETHOD',
       'paymentMethods': 'PAYMETHODS',
@@ -126,6 +136,7 @@ class GpWebpayRequest {
     const signKeys = [
       'merchantNumber', 'operation', 'orderNumber', 'amount', 'currency',
       'depositFlag', 'merOrderNum', 'url', 'description', 'md',
+      'userparam1', 'fastpayid',
       'paymentMethod', 'disabledPaymentMethod', 'paymentMethods',
       'email', 'referenceNumber', 'addInfo',
     ];
@@ -154,3 +165,4 @@ export default GpWebpayRequest;
 export {
   GpWebpayRequestCurrency,
 };
+
